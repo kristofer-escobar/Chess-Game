@@ -1,0 +1,19 @@
+# Created with Anim8or 0.97d beta
+# Object "Board":
+
+newmtl Glass
+Ka 0.576 0.373 0
+Kd 0.576 0.373 0
+Ks 1 1 1
+d 1.0
+Ns 1000.0
+map_Kd Chess_Board.jpg
+
+newmtl Wood
+Ka 0.416 0.416 0.416
+Kd 0.416 0.416 0.416
+Ks 1 1 1
+d 1.0
+Ns 738.6
+map_Kd Wood.bmp
+
