@@ -3,7 +3,7 @@
 const ONEDEGREE = Math.PI / 180;
 const MAXTURN = 80 * ONEDEGREE;
 const MINTURN = -MAXTURN;
-const BIKESCALE = 20;
+const BIKESCALE = 2;
 const WHEELRAD = 1.25 * BIKESCALE;
 
 var ChessGame = function( loader ) {
@@ -21,10 +21,12 @@ var ChessGame = function( loader ) {
     steeringAssembly.rotation.z = 20 * ONEDEGREE;
 
     loader.load( 'models/Board.obj', 'materials/Board.mtl', function ( board ) {
-        board.position.x = 0;
-        board.scale.x = 5;
-        board.scale.y = 5;
-        board.scale.z = 5;
+        board.position.x = -5;
+        board.position.y = 0;
+        board.position.z = 0.5;
+        board.scale.x = 0.5;
+        board.scale.y = 0.5;
+        board.scale.z = 0.5;
         
         self.add( board );
         

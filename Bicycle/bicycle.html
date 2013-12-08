@@ -7,7 +7,7 @@
         <style>
             body {
                 font-family: Monospace;
-                background-color: #000;
+                background-color: #00f;
                 color: #fff;
                 margin: 0px;
                 overflow: hidden;
@@ -43,6 +43,8 @@
 
         <script type="text/javascript" src="../lib/helpers.js"></script>
         <script type="text/javascript" src="js/bicycle.js"></script>
+        <script type="text/javascript" src="js/whitePawn.js"></script>
+
         <script type="text/javascript" src="js/chessgame.js"></script>
         <script type="text/javascript" src="js/road.js"></script>
 
@@ -51,7 +53,7 @@
             var container, stats;
 
             var camera, scene, renderer;
-            var bicycle;
+            var bicycle, white_pawn;
 
             var mouseX = 0, mouseY = 0;
 
@@ -68,7 +70,7 @@
                 document.body.appendChild( container );
 
                 camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-                camera.position.z = 100;
+                camera.position.z = 800;
 
                 // scene
 
@@ -105,6 +107,11 @@
                 // model
                 bicycle = new ChessGame(loader);
                 scene.add( bicycle );
+
+                // model
+                white_pawn = new Pawn(loader);
+                scene.add( white_pawn );
+
 
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
