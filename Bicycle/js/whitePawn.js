@@ -22,14 +22,14 @@ var Pawn = function( loader ) {
 
     loader.load( 'models/pawn.obj', 'materials/pawn.mtl', function ( board ) {
         // Set Position.
-        board.position.x = 0;    
+        board.position.x = 15;    
         board.position.z = 0; 
-        board.position.y = 5.8; 
+        board.position.y = 7.5; 
 
         // Set scale.
-        board.scale.x = 1.5;     
-        board.scale.y = 1.5;    
-        board.scale.z = 1.5;    
+        board.scale.x = 2;     
+        board.scale.y = 2;    
+        board.scale.z = 2;    
         self.add( board );
     } );
     
