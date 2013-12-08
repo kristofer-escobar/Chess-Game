@@ -70,7 +70,7 @@
                 document.body.appendChild( container );
 
                 camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-                camera.position.z = 800;
+                camera.position.z = 1000;
 
                 // scene
 
@@ -150,7 +150,8 @@
 
             function onKeyDown( event ) {
                 switch (event.keyCode) {
-//                case 74: bicycle.turnRight(); break;
+                case 40: mouseY = ( event.clientY - windowHalfY ) / 2;
+				break;
 //                case 76: bicycle.turnLeft(); break;
                 default: return;
                 }

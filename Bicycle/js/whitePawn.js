@@ -3,7 +3,7 @@
 const ONEDEGREE = Math.PI / 180;
 const MAXTURN = 80 * ONEDEGREE;
 const MINTURN = -MAXTURN;
-const BIKESCALE = 2;
+const BIKESCALE = 0.003;
 const WHEELRAD = 1.25 * BIKESCALE;
 
 var Pawn = function( loader ) {
@@ -20,8 +20,16 @@ var Pawn = function( loader ) {
     steeringAssembly.position.y = 1.35;
     steeringAssembly.rotation.z = 20 * ONEDEGREE;
 
-    loader.load( 'models/WhiteRook.obj', 'materials/WhiteRook.mtl', function ( board ) {
-        board.position.x = 0;        
+    loader.load( 'models/pawn.obj', 'materials/pawn.mtl', function ( board ) {
+        // Set Position.
+        board.position.x = 0;    
+        board.position.z = 0; 
+        board.position.y = 5.8; 
+
+        // Set scale.
+        board.scale.x = 1.5;     
+        board.scale.y = 1.5;    
+        board.scale.z = 1.5;    
         self.add( board );
     } );
     
