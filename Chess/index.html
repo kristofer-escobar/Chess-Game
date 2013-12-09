@@ -121,6 +121,14 @@
                 white_pawn = new Pawn(loader);
                 scene.add( white_pawn );
 
+                var position = { z : 0};
+				var target = { z : 11};
+				var tween = new TWEEN.Tween(position).to(target, 1000);
+
+				tween.onUpdate(function(){
+    			white_pawn.position.z = position.z;
+				});
+
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 container.appendChild( renderer.domElement );
@@ -132,7 +140,10 @@
 
                 window.addEventListener( 'resize', onWindowResize, false );
 
+                tween.start();
             }
+
+
 
             function onWindowResize() {
 
@@ -177,6 +188,7 @@
             }
 
             function render() {
+            	TWEEN.update();
                 renderer.render( scene, camera );
 
             }
