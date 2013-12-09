@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Chess Game</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                font-family: Monospace;
+                background-color: #ccc;
+                color: #fff;
+                margin: 0px;
+                overflow: hidden;
+            }
+            #info {
+                color: #fff;
+                position: absolute;
+                top: 10px;
+                width: 100%;
+                text-align: center;
+                z-index: 100;
+                display:block;
+            }
+            #info a, .button {
+                color: #f00;
+                font-weight: bold;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script type="text/javascript" src="../lib/Three.js"></script>
+		<script type='text/javascript' src='../lib/Tween.js'></script>
+		<script type='text/javascript' src='../lib/Ticker.js'></script>
+		<script type='text/javascript' src='../lib/TrackballControls.js'></script>
+        <script type="text/javascript" src="../lib/loaders/MTLLoader.js"></script>
+        <script type="text/javascript" src="../lib/loaders/OBJMTLLoader.js"></script>
+
+        <script type="text/javascript" src="../lib/Detector.js"></script>
+        <script type="text/javascript" src="../lib/stats.min.js"></script>
+
+        <script type="text/javascript" src="../lib/dat.gui.min.js"></script>
+
+        <script type="text/javascript" src="../lib/helpers.js"></script>
+        <script type="text/javascript" src="js/bicycle.js"></script>
+        <script type="text/javascript" src="js/whitePawn.js"></script>
+
+        <script type="text/javascript" src="js/chessboard.js"></script>
+        <script type="text/javascript" src="js/road.js"></script>
+
+		<script type="text/javascript">
+
+            var container, stats;
+
+            var camera, scene, renderer;
+            var board, white_pawn;
+
+            var mouseX = 0, mouseY = 0;
+
+            var windowHalfX = window.innerWidth / 2;
+            var windowHalfY = window.innerHeight / 2;
+
+
+            init();
+            animate();
+
+            function init() {
+
+                container = document.createElement( 'div' );
+                document.body.appendChild( container );
+
+                // Camera
+                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+                camera.position.x = 0;
+                camera.position.y = 100;
+                camera.position.z = 70;
+
+                // Camera controls.
+                controls = new THREE.TrackballControls( camera );
+                controls.rotateSpeed = 1.0;
+				controls.zoomSpeed = 1.2;
+				controls.panSpeed = 0.8;
+				controls.noZoom = false;
+				controls.noPan = false;
+				controls.staticMoving = true;
+				controls.dynamicDampingFactor = 0.3;
+				controls.keys = [ 65, 83, 68 ];
+				controls.addEventListener( 'change', render );
+
+                // scene
+                scene = new THREE.Scene();
+
+                var ambient = new THREE.AmbientLight( 0x101010 );
+                scene.add( ambient );
+
+                // var pointLight2 = new THREE.PointLight( 0xffeedd );
+                // pointLight2.position.set( -100, 250, -25 ).normalize();
+                // scene.add( pointLight2 );
+
+                // var pointLight = new THREE.PointLight( 0xffffff );
+                // pointLight.position.set( 50, 100, 100 ).normalize();
+                // scene.add( pointLight );
+
+                var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+                directionalLight.position.set( 0.5, 2, 1 ).normalize();
+                scene.add( directionalLight );
+
+                var loader = new THREE.OBJMTLLoader();
+
+                // model
+                board = new ChessBoard(loader);
+                scene.add( board );
+
+                // Initialize chess board.
+                board.init();
+
+                // model
+                white_pawn = new Pawn(loader);
+                scene.add( white_pawn );
+
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                container.appendChild( renderer.domElement );
+
+                document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+                document.addEventListener( 'keyup', onKeyUp, false );
+                document.addEventListener( 'keydown', onKeyDown, false );
+
+                window.addEventListener( 'resize', onWindowResize, false );
+
+            }
+
+            function onWindowResize() {
+
+                windowHalfX = window.innerWidth / 2;
+                windowHalfY = window.innerHeight / 2;
+
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+
+                controls.handleResize();
+
+            }
+
+            function onKeyUp( event ) {
+                switch (event.keyCode) {
+                case 73: bicycle.pedalFwd(); break;
+                case 75: bicycle.pedalRev(); break;
+                default: return;
+                }
+            }
+
+            function onKeyDown( event ) {
+                switch (event.keyCode) {
+                default: return;
+                }
+            }
+
+            function onDocumentMouseMove( event ) {
+
+            }
+
+            function animate() {
+                requestAnimationFrame( animate );
+                controls.update();
+                try {
+                    bicycle.animate();
+                } catch (e) {}
+                render();
+
+            }
+
+            function render() {
+                renderer.render( scene, camera );
+
+            }
+
+        </script>
+
+    </body>
+</html>
