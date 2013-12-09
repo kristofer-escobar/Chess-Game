@@ -1,80 +1,49 @@
 var loader = new THREE.OBJMTLLoader();
 
-const ONEDEGREE = Math.PI / 180;
-const MAXTURN = 80 * ONEDEGREE;
-const MINTURN = -MAXTURN;
-const BIKESCALE = 2;
-const WHEELRAD = 1.25 * BIKESCALE;
+const BOARD_SCALE = 5.15;
+const BOARD_X_POSITION = -2.8;
+const BOARD_Y_POSITION = 0;
+const BOARD_Z_POSITION = 3;
+const MOVE_DISTANCE = 2.15;
+
+
 
 var ChessBoard = function( loader ) {
 
+    // Store reference to this chess board.
     var self = this;
 
-    this.scale.x = this.scale.y = this.scale.z = BIKESCALE;
-    this.position.x = 0;
-    this.position.y = 0;
-    this.incr = 0;
+    // Scale.
+    this.scale.x = this.scale.y = this.scale.z = BOARD_SCALE;
     
-    var steeringAssembly = new THREE.Object3D();
-    steeringAssembly.position.x = 3.3;
-    steeringAssembly.position.y = 1.35;
-    steeringAssembly.rotation.z = 20 * ONEDEGREE;
+    // Position.
+    this.position.x = BOARD_X_POSITION;
+    this.position.y = BOARD_Y_POSITION;
+    this.position.z = BOARD_Z_POSITION;
 
-    loader.load( 'models/chessboard.obj', 'materials/chessboard.mtl', function ( board ) {
-        board.position.x = -0.15;
-        board.position.y = 0;
-        board.position.z = 0.15;
-        board.scale.x = 0.5;
-        board.scale.y = 0.5;
-        board.scale.z = 0.5;
-        
+    // Board Positions.
+    this.boardPosition = {};
+    this.boardPositionMap = {};
+
+    // Load chess board model.
+    loader.load( 'models/chessboard.obj', 'materials/chessboard.mtl', function ( board ) {        
         self.add( board );
-        
         self.buildGUI();
     } );
-    
-
 
 }
 
 ChessBoard.prototype = new THREE.Object3D();
 
 ChessBoard.prototype.animate = function(){
-//    this.incr = -WHEELRAD * this.rearWheel.incr;
-//    this.frontWheel.incr = this.rearWheel.incr / Math.cos( this.handlebar.rotation.y );
-//    this.frontWheel.rotation.z -= this.frontWheel.incr;
-//    this.rearWheel.rotation.z -= this.rearWheel.incr;
-//    this.rotation.y += Math.atan(1.25 * this.frontWheel.incr * Math.sin( this.handlebar.rotation.y ) / 3.6);
-//    this.position.x -= this.incr * Math.cos( this.rotation.y );
-//    this.position.z += this.incr * Math.sin( this.rotation.y );
+
 }
 
 ChessBoard.prototype.init = function(){
-    // loader.load( 'models/pawn.obj', 'materials/pawn.mtl', function ( object ) { 
-    //     self.add( object );
-    // } );
-}
-//
-ChessBoard.prototype.pedalFwd = function(){
-//    this.rearWheel.incr += ONEDEGREE;
-}
-//
-ChessBoard.prototype.pedalRev = function(){
-//    this.rearWheel.incr -= ONEDEGREE;
-}
-//
-ChessBoard.prototype.turnRight = function(){
-//    if (this.handlebar.rotation.y < MAXTURN) {
-//        this.handlebar.rotation.y += ONEDEGREE;
-//        //this.rotateX(-ONEDEGREE);
-//    }
-}
-//
-ChessBoard.prototype.turnLeft = function(){
-//    if (this.handlebar.rotation.y > MINTURN) {
-//        this.handlebar.rotation.y -= ONEDEGREE;
-//        //this.rotateX(ONEDEGREE);
-//    }
+
+// Initialize the chess board.
+this.initBoard();
+
 }
 
 ChessBoard.prototype.buildGUI = function(){
@@ -83,4 +52,31 @@ ChessBoard.prototype.buildGUI = function(){
 //    chessGameFolder.add(this.rearWheel, 'incr', MINTURN / 4, MAXTURN / 4).listen();
 //    chessGameFolder.add(this.handlebar.rotation, 'y', MINTURN, MAXTURN).listen();
     chessGameFolder.open();
+}
+
+
+ChessBoard.prototype.initBoard = function(){
+    
+    var xPos, zPos;
+    
+    zPos = 0;
+
+    for(var i = 65; i <= 72; i++){
+
+        xPos = 0;
+
+        for(var j = 1; j <= 8; j++){
+
+            // Initialize empty chess board positions.
+            this.boardPosition[String.fromCharCode(i) + j] = "empty";
+
+            // Map board position to coordinates.
+            this.boardPositionMap[String.fromCharCode(i) + j] = {'x': xPos, 'z': zPos};
+
+            xPos -= MOVE_DISTANCE;
+        }
+
+        zPos += MOVE_DISTANCE;
+    }
+
 }
