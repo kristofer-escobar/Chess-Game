@@ -121,29 +121,38 @@
                 // Initialize chess board.
                 board.init( scene );
 
-                var position = { z : 0};
-				var target = { z : 11};
-				var tween = new TWEEN.Tween(position).to(target, 1000);
-
-				tween.onUpdate(function(){
-    			white_pawn.position.z = position.z;
-				});
+                movePiece('B1', 'C1');
 
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 container.appendChild( renderer.domElement );
 
                 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
                 document.addEventListener( 'keyup', onKeyUp, false );
                 document.addEventListener( 'keydown', onKeyDown, false );
-
-                window.addEventListener( 'resize', onWindowResize, false );
-
-                //tween.start();
+                window.addEventListener( 'resize', onWindowResize, false );   
             }
 
+            // Function to move chess pieces.
+            function movePiece(startPosition, targetPosition){
 
+                var position = { x: board.PositionMap[startPosition].x, z : board.PositionMap[startPosition].z};
+				var target = { x: board.PositionMap[targetPosition].x, z : board.PositionMap[targetPosition].z};
+
+				var tween = new TWEEN.Tween(position).to(target, 1000);
+
+				var currentPiece = board.boardPosition[startPosition];
+
+				debugger;
+
+				tween.onUpdate(function(){
+
+					currentPiece.position.x = position.x;
+    				currentPiece.position.z = position.z;
+				});
+
+				tween.start();
+            }
 
             function onWindowResize() {
 

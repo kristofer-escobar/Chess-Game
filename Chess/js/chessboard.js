@@ -122,17 +122,20 @@ ChessBoard.prototype.initPieces = function( scene ){
     // Create pieces and place into initial state.
     for(position in initialState){
 
-        // Update pieces on board.
-        this.boardPosition[position] = initialState[position];
-
         // Get color.
         var color = initialState[position].substring(0,5).toLowerCase();
         
-        // Get Piece.
-        var piece = initialState[position].substring(5);
+        // Get Piece name.
+        var pieceName = initialState[position].substring(5);
+
+        // Get Reference to piece.
+        var pieceObject = getPiece( pieceName, color, this.PositionMap[position] );
 
         // Place piece on board.
-        scene.add( getPiece( piece, color, this.PositionMap[position] ) );
+        scene.add( pieceObject );
+
+        // Update pieces on board.
+        this.boardPosition[position] = pieceObject;
 
     }
 }

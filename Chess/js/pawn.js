@@ -34,7 +34,7 @@ var Pawn = function(color, position) {
 
 Pawn.prototype = new THREE.Object3D();
 
-Pawn.prototype.animate = function(){
+Pawn.prototype.move = function(targetPosition){
 
 }
 
