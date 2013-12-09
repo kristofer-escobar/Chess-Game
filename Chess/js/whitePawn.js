@@ -1,8 +1,10 @@
+var loader = new THREE.OBJMTLLoader();
+
 const PAWN_SCALE = 5;
 const offset = -2.15;
 var xposition = 0;
 
-var Pawn = function( loader ) {
+var Pawn = function(color, position) {
 
     var self = this;
 
@@ -13,10 +15,8 @@ var Pawn = function( loader ) {
 
     // Loading each pawn individually, for testing only.
     loader.load( 'models/BlackKnight.obj', 'materials/BlackKnight.mtl', function ( object ) { 
-    	object.position.x = -15.05;
-    	xposition += offset;
-
-    	object.position.z = 15.05;
+    	object.position.x = position.x;
+    	object.position.z = position.z;
         self.add( object );
     } );
 

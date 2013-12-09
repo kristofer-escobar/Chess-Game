@@ -2,7 +2,7 @@ var loader = new THREE.OBJMTLLoader();
 
 const SCALE = 5;
 
-var Pawn = function(color, position) {
+var Knight = function(color, position) {
 
     var self = this;
 
@@ -11,30 +11,29 @@ var Pawn = function(color, position) {
      this.position.y = 0;
      this.position.z = 0;
 
-    // Load pawn model.
+    // Load Knight model.
     if(color == "white"){
 
-        loader.load( 'models/WhitePawn.obj', 'materials/WhitePawn.mtl', function ( object ) { 
+        loader.load( 'models/WhiteKnight.obj', 'materials/WhiteKnight.mtl', function ( object ) { 
             object.position.x = position.x;
             object.position.z = position.z;
             self.add( object );
         } );
     } else if(color == "black"){
 
-        loader.load( 'models/BlackPawn.obj', 'materials/BlackPawn.mtl', function ( object ) { 
+        loader.load( 'models/BlackKnight.obj', 'materials/BlackKnight.mtl', function ( object ) { 
             object.position.x = position.x;
             object.position.z = position.z;
             self.add( object );
         } );
     }else{
 
-        alert("Error: loading Pawn model.");
+        alert("Error: loading Knight model.");
     }
 }
 
-Pawn.prototype = new THREE.Object3D();
+Knight.prototype = new THREE.Object3D();
 
-Pawn.prototype.animate = function(){
+Knight.prototype.animate = function(){
 
 }
-

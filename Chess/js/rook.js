@@ -2,7 +2,7 @@ var loader = new THREE.OBJMTLLoader();
 
 const SCALE = 5;
 
-var Pawn = function(color, position) {
+var Rook = function(color, position) {
 
     var self = this;
 
@@ -11,30 +11,29 @@ var Pawn = function(color, position) {
      this.position.y = 0;
      this.position.z = 0;
 
-    // Load pawn model.
+    // Load rook model.
     if(color == "white"){
 
-        loader.load( 'models/WhitePawn.obj', 'materials/WhitePawn.mtl', function ( object ) { 
-            object.position.x = position.x;
+        loader.load( 'models/WhiteRook.obj', 'materials/WhiteRook.mtl', function ( object ) { 
+            object.position.x = position.x - 0.25; // -0.25 subtracted to correct weird bug causing white rook to veer to the left.
             object.position.z = position.z;
             self.add( object );
         } );
     } else if(color == "black"){
 
-        loader.load( 'models/BlackPawn.obj', 'materials/BlackPawn.mtl', function ( object ) { 
+        loader.load( 'models/BlackRook.obj', 'materials/BlackRook.mtl', function ( object ) { 
             object.position.x = position.x;
             object.position.z = position.z;
             self.add( object );
         } );
     }else{
 
-        alert("Error: loading Pawn model.");
+        alert("Error: loading rook model.");
     }
 }
 
-Pawn.prototype = new THREE.Object3D();
+Rook.prototype = new THREE.Object3D();
 
-Pawn.prototype.animate = function(){
+Rook.prototype.animate = function(){
 
 }
-

@@ -46,7 +46,12 @@
 
         <script type="text/javascript" src="../lib/helpers.js"></script>
         <script type="text/javascript" src="js/bicycle.js"></script>
-        <script type="text/javascript" src="js/whitePawn.js"></script>
+        <script type="text/javascript" src="js/pawn.js"></script>
+        <script type="text/javascript" src="js/rook.js"></script>
+        <script type="text/javascript" src="js/knight.js"></script>
+        <script type="text/javascript" src="js/bishop.js"></script>
+        <script type="text/javascript" src="js/queen.js"></script>
+        <script type="text/javascript" src="js/king.js"></script>
 
         <script type="text/javascript" src="js/chessboard.js"></script>
         <script type="text/javascript" src="js/road.js"></script>
@@ -56,13 +61,12 @@
             var container, stats;
 
             var camera, scene, renderer;
-            var board, white_pawn;
+            var board;
 
             var mouseX = 0, mouseY = 0;
 
             var windowHalfX = window.innerWidth / 2;
             var windowHalfY = window.innerHeight / 2;
-
 
             init();
             animate();
@@ -90,7 +94,7 @@
 				controls.keys = [ 65, 83, 68 ];
 				controls.addEventListener( 'change', render );
 
-                // scene
+                // Scene
                 scene = new THREE.Scene();
 
                 var ambient = new THREE.AmbientLight( 0x101010 );
@@ -110,16 +114,12 @@
 
                 var loader = new THREE.OBJMTLLoader();
 
-                // model
-                board = new ChessBoard(loader);
+                // Create chess board.
+                board = new ChessBoard();
                 scene.add( board );
 
                 // Initialize chess board.
-                board.init();
-
-                // model
-                white_pawn = new Pawn(loader);
-                scene.add( white_pawn );
+                board.init( scene );
 
                 var position = { z : 0};
 				var target = { z : 11};

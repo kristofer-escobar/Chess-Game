@@ -6,9 +6,7 @@ const BOARD_Y_POSITION = 0;
 const BOARD_Z_POSITION = 3;
 const MOVE_DISTANCE = 2.15;
 
-
-
-var ChessBoard = function( loader ) {
+var ChessBoard = function() {
 
     // Store reference to this chess board.
     var self = this;
@@ -23,7 +21,7 @@ var ChessBoard = function( loader ) {
 
     // Board Positions.
     this.boardPosition = {};
-    this.boardPositionMap = {};
+    this.PositionMap = {};
 
     // Load chess board model.
     loader.load( 'models/chessboard.obj', 'materials/chessboard.mtl', function ( board ) {        
@@ -39,10 +37,13 @@ ChessBoard.prototype.animate = function(){
 
 }
 
-ChessBoard.prototype.init = function(){
+ChessBoard.prototype.init = function( scene ){
 
 // Initialize the chess board.
 this.initBoard();
+
+// Initialize chess pieces.
+this.initPieces(scene);
 
 }
 
@@ -71,7 +72,7 @@ ChessBoard.prototype.initBoard = function(){
             this.boardPosition[String.fromCharCode(i) + j] = "empty";
 
             // Map board position to coordinates.
-            this.boardPositionMap[String.fromCharCode(i) + j] = {'x': xPos, 'z': zPos};
+            this.PositionMap[String.fromCharCode(i) + j] = {'x': xPos, 'z': zPos};
 
             xPos -= MOVE_DISTANCE;
         }
@@ -79,4 +80,64 @@ ChessBoard.prototype.initBoard = function(){
         zPos += MOVE_DISTANCE;
     }
 
+}
+
+ChessBoard.prototype.initPieces = function( scene ){
+    
+    // Dictionary to hold initial state of board.
+    var initialState = {'A1': 'WhiteRook', 
+                        'A2': 'WhiteKnight', 
+                        'A3': 'WhiteBishop', 
+                        'A4': 'WhiteQueen', 
+                        'A5': 'WhiteKing', 
+                        'A6': 'WhiteBishop', 
+                        'A7': 'WhiteKnight', 
+                        'A8': 'WhiteRook', 
+                        'B1': 'WhitePawn', 
+                        'B2': 'WhitePawn', 
+                        'B3': 'WhitePawn', 
+                        'B4': 'WhitePawn', 
+                        'B5': 'WhitePawn', 
+                        'B6': 'WhitePawn', 
+                        'B7': 'WhitePawn', 
+                        'B8': 'WhitePawn', 
+                        'G1': 'BlackPawn', 
+                        'G2': 'BlackPawn', 
+                        'G3': 'BlackPawn', 
+                        'G4': 'BlackPawn', 
+                        'G5': 'BlackPawn', 
+                        'G6': 'BlackPawn', 
+                        'G7': 'BlackPawn', 
+                        'G8': 'BlackPawn', 
+                        'H1': 'BlackRook', 
+                        'H2': 'BlackKnight', 
+                        'H3': 'BlackBishop', 
+                        'H4': 'BlackQueen', 
+                        'H5': 'BlackKing', 
+                        'H6': 'BlackBishop', 
+                        'H7': 'BlackKnight', 
+                        'H8': 'BlackRook'
+}
+
+    // Create pieces and place into initial state.
+    for(position in initialState){
+
+        // Update pieces on board.
+        this.boardPosition[position] = initialState[position];
+
+        // Get color.
+        var color = initialState[position].substring(0,5).toLowerCase();
+        
+        // Get Piece.
+        var piece = initialState[position].substring(5);
+
+        // Place piece on board.
+        scene.add( getPiece( piece, color, this.PositionMap[position] ) );
+
+    }
+}
+
+// Helper function to create chess pieces. 
+function getPiece(name, color, position){
+  return ( typeof window[name] === 'function' ) ? new window[name](color, position) : {};
 }
