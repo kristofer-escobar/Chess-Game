@@ -62,17 +62,17 @@ ChessBoard.prototype.initBoard = function(){
     
     zPos = 0;
 
-    for(var i = 65; i <= 72; i++){
+    for(var i = 1; i <= 8; i++){
 
         xPos = 0;
 
-        for(var j = 1; j <= 8; j++){
+        for(var j = 65; j <= 72; j++){
 
             // Initialize empty chess board positions.
-            this.boardPosition[String.fromCharCode(i) + j] = "empty";
+            this.boardPosition[String.fromCharCode(j) + i] = "empty";
 
             // Map board position to coordinates.
-            this.PositionMap[String.fromCharCode(i) + j] = {'x': xPos, 'z': zPos};
+            this.PositionMap[String.fromCharCode(j) + i] = {'x': xPos, 'z': zPos};
 
             xPos -= MOVE_DISTANCE;
         }
@@ -86,36 +86,36 @@ ChessBoard.prototype.initPieces = function( scene ){
     
     // Dictionary to hold initial state of board.
     var initialState = {'A1': 'WhiteRook', 
-                        'A2': 'WhiteKnight', 
-                        'A3': 'WhiteBishop', 
-                        'A4': 'WhiteQueen', 
-                        'A5': 'WhiteKing', 
-                        'A6': 'WhiteBishop', 
-                        'A7': 'WhiteKnight', 
-                        'A8': 'WhiteRook', 
-                        'B1': 'WhitePawn', 
+                        'B1': 'WhiteKnight', 
+                        'C1': 'WhiteBishop', 
+                        'D1': 'WhiteQueen', 
+                        'E1': 'WhiteKing', 
+                        'F1': 'WhiteBishop', 
+                        'G1': 'WhiteKnight', 
+                        'H1': 'WhiteRook', 
+                        'A2': 'WhitePawn', 
                         'B2': 'WhitePawn', 
-                        'B3': 'WhitePawn', 
-                        'B4': 'WhitePawn', 
-                        'B5': 'WhitePawn', 
-                        'B6': 'WhitePawn', 
-                        'B7': 'WhitePawn', 
-                        'B8': 'WhitePawn', 
-                        'G1': 'BlackPawn', 
-                        'G2': 'BlackPawn', 
-                        'G3': 'BlackPawn', 
-                        'G4': 'BlackPawn', 
-                        'G5': 'BlackPawn', 
-                        'G6': 'BlackPawn', 
+                        'C2': 'WhitePawn', 
+                        'D2': 'WhitePawn', 
+                        'E2': 'WhitePawn', 
+                        'F2': 'WhitePawn', 
+                        'G2': 'WhitePawn', 
+                        'H2': 'WhitePawn', 
+                        'A7': 'BlackPawn', 
+                        'B7': 'BlackPawn', 
+                        'C7': 'BlackPawn', 
+                        'D7': 'BlackPawn', 
+                        'E7': 'BlackPawn', 
+                        'F7': 'BlackPawn', 
                         'G7': 'BlackPawn', 
-                        'G8': 'BlackPawn', 
-                        'H1': 'BlackRook', 
-                        'H2': 'BlackKnight', 
-                        'H3': 'BlackBishop', 
-                        'H4': 'BlackQueen', 
-                        'H5': 'BlackKing', 
-                        'H6': 'BlackBishop', 
-                        'H7': 'BlackKnight', 
+                        'H7': 'BlackPawn', 
+                        'A8': 'BlackRook', 
+                        'A8': 'BlackKnight', 
+                        'B8': 'BlackBishop', 
+                        'C8': 'BlackQueen', 
+                        'D8': 'BlackKing', 
+                        'F8': 'BlackBishop', 
+                        'G8': 'BlackKnight', 
                         'H8': 'BlackRook'
 }
 
