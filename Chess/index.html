@@ -31,6 +31,7 @@
     </head>
 
     <body>
+    	<script type="text/javascript" src="../lib/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="../lib/Three.js"></script>
 		<script type='text/javascript' src='../lib/EventDispatcher.js'></script>
 		<script type='text/javascript' src='../lib/Ticker.js'></script>
@@ -47,6 +48,7 @@
         <script type="text/javascript" src="../lib/helpers.js"></script>
         <script type="text/javascript" src="js/bicycle.js"></script>
         <script type="text/javascript" src="js/pawn.js"></script>
+        <script type="text/javascript" src="js/pawn2.js"></script>
         <script type="text/javascript" src="js/rook.js"></script>
         <script type="text/javascript" src="js/knight.js"></script>
         <script type="text/javascript" src="js/bishop.js"></script>
@@ -116,13 +118,17 @@
 
                 // Create chess board.
                 board = new ChessBoard();
-                scene.add( board );
+                
 
                 // Initialize chess board.
                 board.init( scene );
 
-                movePiece('B1', 'C1');
+				scene.add( board );
 
+				setTimeout(function(){movePiece('A2', 'A3');
+
+			},3000);
+               
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 container.appendChild( renderer.domElement );
@@ -142,8 +148,6 @@
 				var tween = new TWEEN.Tween(position).to(target, 1000);
 
 				var currentPiece = board.boardPosition[startPosition];
-
-				debugger;
 
 				tween.onUpdate(function(){
 
@@ -205,4 +209,5 @@
         </script>
 
     </body>
+
 </html>
