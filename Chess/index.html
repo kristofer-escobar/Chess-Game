@@ -176,13 +176,19 @@
             }
 
             // Function to move chess pieces.
-            function movePiece(startPosition, targetPosition){
+            function movePiece(startPosition, targetPosition, callback){
 
             	// Get piece starting position.
                 var position = { x: board.PositionMap[startPosition].x, z : board.PositionMap[startPosition].z};
 
                 // Get piece target position.
 				var target = { x: board.PositionMap[targetPosition].x, z : board.PositionMap[targetPosition].z};
+
+				// // Check for captures.
+				// if(board.boardPosition[targetPosition] != 'empty'){
+				// 	capture(targetPosition, callback);
+				// 	return;
+				// }
 
 				// Create a new tween.
 				var tween = new TWEEN.Tween(position).to(target, 1000);
@@ -201,6 +207,10 @@
 
 					// Clear out pervious position.
 					board.boardPosition[startPosition] = "empty";
+				});
+
+				tween.onComplete(function(){
+					callback(animateQueue);
 				});
 
 				// Start tween.

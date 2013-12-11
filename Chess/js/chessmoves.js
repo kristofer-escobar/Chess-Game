@@ -6,6 +6,7 @@ var seconds = 2;
 var moveList = [];
 var gameover = false;
 var captured = [];
+var animateQueue = [];
 
 var ChessMoves = function() {
 
@@ -32,7 +33,7 @@ var ChessMoves = function() {
 
             setTimeout(function() {
                 loadState(moveList, true);
-            }, 2000);
+            }, 1000);
 
             //loadState(moveList, true);
         } else {
@@ -88,7 +89,6 @@ var move = function(response) {
         var currentPiece;
         var promotion = false;
         var promotePiece = null;
-        var animateQueue = [];
 
         // Loop through each move.
         for (var i = 0; i < list.length; i++) {
@@ -223,11 +223,11 @@ var move = function(response) {
                 captured.push(board.boardPosition[targetPosition]);
 
                 if (animate) {
-                    animateQueue.push({
-                        func: capture,
-                        param1: targetPosition,
-                        param2: 0.01
-                    });
+                    // animateQueue.push({
+                    //     func: capture,
+                    //     param1: targetPosition,
+                    //     param2: 0.01
+                    // });
                 } else {
                     // Shrink captured pieces.
                     board.boardPosition[targetPosition].scale.set(0.01, 0.01, 0.01);
@@ -272,18 +272,45 @@ var move = function(response) {
     }
 
     // Animate capturing of pieces.
-    function capture(){
+    function capture(animation){
 
+        var currentPiece = board.boardPosition[animation.param2];
+
+        var scale = { x : currentPiece.scale.x , y: currentPiece.scale.y, z: currentPiece.scale.z};
+        var target = { x : 0.01, y: 0.01, z: 0.01 };
+
+        var tweenCapture = new TWEEN.Tween(position).to(target, 1000);
+
+        tweenCapture.onUpdate(function(){
+            //  Shrink capture piece. 
+            currentPiece.scale.set(scale.x, scale.y, scale.z);
+        });
+
+        tweenCapture.onComplete(function(){
+            animation.func(animation.param1, animation.param2, handleAnimations);
+        });
+
+        tweenCapture.start();
+
+        console.log('entered capture');
     }
 
     // Function to handle queued up animations.
     function handleAnimations( queue ){
-        while(queue.length > 0){
+
+        //debugger;
+        if(queue.length > 0){
             var animation = queue.shift();
 
-            setTimeout(function() {
+            // Check for capture.
+            if(board.boardPosition[animation.param2] != 'empty'){
+                capture(animation);
+            }else{
                 // Run animation.
-                animation.func(animation.param1, animation.param2);
-            }, 3000);
+                animation.func(animation.param1, animation.param2, handleAnimations);
+            }
+
+        }else{
+            console.log("Done animating.");
         }
     }
