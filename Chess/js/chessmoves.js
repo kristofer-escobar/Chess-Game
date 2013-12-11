@@ -319,7 +319,7 @@ var move = function(response) {
         var tweenCapture = new TWEEN.Tween(scale).to(target, 500);
 
         tweenCapture.onUpdate(function() {
-            console.log('In tween, scale is:' + scale.x + ' ' + scale.y + ' ' + scale.z);
+            //console.log('In tween, scale is:' + scale.x + ' ' + scale.y + ' ' + scale.z);
             //  Shrink capture piece. 
             currentPiece.scale.set(scale.x, scale.y, scale.z);
         });

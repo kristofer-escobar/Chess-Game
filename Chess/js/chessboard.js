@@ -66,12 +66,22 @@ var ChessBoard = function() {
     ]
 
     // Load chess board model.
-    loader.load('models/chessboard.obj', 'materials/chessboard.mtl', function(board) {
+    loader.load('models/board.obj', 'materials/board.mtl', function(board) {
         board.position.set(-0.3625, 0, 0.5);
-        board.scale.set(1.025, 1.025, 1.025);
+        board.scale.set(0.1725, 0.1725, 0.1725);
         self.add(board);
         self.buildGUI();
     });
+
+    this.changeBoard = function() {
+        // Load new chess board model.
+        loader.load('models/chessboard.obj', 'materials/chessboard.mtl', function(board) {
+            board.position.set(-0.3625, 0, 0.5);
+            board.scale.set(1.025, 1.025, 1.025);
+            //self = board;
+            self.add(board);
+        });
+    }
 
 }
 
@@ -113,6 +123,7 @@ ChessBoard.prototype.buildGUI = function() {
     Camera.open();
 
     var theme = gui.addFolder('Themes');
+    theme.add(this, 'changeBoard').name("Change board");
     theme.open();
 
 }
@@ -166,15 +177,15 @@ ChessBoard.prototype.loadPieces = function(callback) {
         })(this.pieces[piece]);
     }
 
-        // Check if all the models were loaded.
-        var loadedModels = setInterval(function() {
-            if (currentLoaded === modelsLoaded) {
-                clearInterval(loadedModels);
+    // Check if all the models were loaded.
+    var loadedModels = setInterval(function() {
+        if (currentLoaded === modelsLoaded) {
+            clearInterval(loadedModels);
 
-                // Callback to initialize pieces on board.
-                callback();
-            }
-        }, 100);
+            // Callback to initialize pieces on board.
+            callback();
+        }
+    }, 100);
 
 }
 
@@ -245,4 +256,3 @@ ChessBoard.prototype.initPieces = function() {
 
     }
 }
-
