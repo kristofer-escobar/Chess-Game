@@ -4,20 +4,50 @@ var ChessControls = function() {
 
     // Change camera views. Currently instant, will animate soon.
     this.WhiteView = function() {
-        camera.position.x = 0;
-        camera.position.y = 100;
-        camera.position.z = -70;
+
+        var position = { x : camera.position.x, y: camera.position.y, z: camera.position.z };
+        var target = { x : 0, y: 100, z: -90 };
+        var tweenCamera = new TWEEN.Tween(position).to(target, 2000);
+
+        tweenCamera.onUpdate(function(){
+
+            camera.position.x = position.x;
+            camera.position.y = position.y;
+            camera.position.z = position.z;
+        });
+
+        tweenCamera.start();
     }
 
     this.BlackView = function() {
-        camera.position.x = 0;
-        camera.position.y = 100;
-        camera.position.z = 100;
+
+        var position = { x : camera.position.x, y: camera.position.y, z: camera.position.z };
+        var target = { x : 0, y: 100, z: 120 };
+        var tweenCamera = new TWEEN.Tween(position).to(target, 2000);
+
+        tweenCamera.onUpdate(function(){
+
+            camera.position.x = position.x;
+            camera.position.y = position.y;
+            camera.position.z = position.z;
+        });
+
+        tweenCamera.start();
     }
 
     this.TopView = function() {
-        camera.position.x = 0;
-        camera.position.y = 150;
-        camera.position.z = 0;
+
+        var position = { x : camera.position.x, y: camera.position.y, z: camera.position.z };
+        var target = { x : 0, y: 150, z: 0 };
+        var tweenCamera = new TWEEN.Tween(position).to(target, 2000);
+
+        tweenCamera.onUpdate(function(){
+
+            camera.position.x = position.x;
+            camera.position.y = position.y;
+            camera.position.z = position.z;
+        });
+
+        tweenCamera.start();
     }
 }

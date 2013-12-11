@@ -136,8 +136,8 @@ var move = function(response) {
             currentPiece = board.boardPosition[startPosition];
 
             // Check for promotions.
-            if(pieceName == 'P'){
-
+            if(pieceName == 'P' && promotion){
+                console.log('Promoted to' + promotePiece);
             }
 
             // Checking for white castling.
@@ -279,6 +279,8 @@ var move = function(response) {
                 // Clear out previous position.
                 board.boardPosition[startPosition] = "empty";
             }
+
+            promotion = false;
         }
 
         // Check for animations.
