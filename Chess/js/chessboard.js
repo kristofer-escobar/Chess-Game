@@ -67,8 +67,8 @@ var ChessBoard = function() {
 
     // Load chess board model.
     loader.load('models/board.obj', 'materials/board.mtl', function(board) {
-        board.position.set(-0.3625, 0, 0.5);
-        board.scale.set(0.1725, 0.1725, 0.1725);
+        board.position.set(-0.6625, 0, 0.5);
+        board.scale.set(0.205, 0.205, 0.205);
         self.add(board);
         self.buildGUI();
     });
@@ -123,7 +123,7 @@ ChessBoard.prototype.buildGUI = function() {
     Camera.open();
 
     var theme = gui.addFolder('Themes');
-    theme.add(this, 'changeBoard').name("Change board");
+    theme.add(this, 'changeBoard').name("Add border");
     theme.open();
 
 }
