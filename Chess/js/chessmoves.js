@@ -7,6 +7,7 @@ var moveList = [];
 var gameover = false;
 var captured = [];
 var animateQueue = [];
+var timeoutId;
 
 var ChessMoves = function() {
 
@@ -65,17 +66,19 @@ var ChessMoves = function() {
 
 var move = function(response) {
 
+    console.log(response);
+
     gameover = response.gameover;
 
     moveList = response.moves;
 
-    if (!gameover) {
+    if ((!gameover) && (moveList)) {
         // Game is still going, get the following move and animate.
         for (var i = moveList.length; i < response.moves.length; i++) {
             // Get difference in moves.
             var difference = [];
 
-            for(var i = moveList.length; i < response.moves.length; i ++){
+            for (var i = moveList.length; i < response.moves.length; i++) {
                 difference.push(response.moves[i]);
             }
 
@@ -86,10 +89,15 @@ var move = function(response) {
         moveList = response.moves;
 
         // Poll
-        setTimeout(start, seconds * 1000);
+        timeoutId = setTimeout(start, seconds * 1000);
+    } else if(gameover && !timeoutId){
+        loadState(moveList, false);
     }
 
-    console.log(response);
+    if(gameover){
+        alert("Game over.");
+    }
+
 }
 
     function loadState(list, animate) {
@@ -241,7 +249,7 @@ var move = function(response) {
                     // });
                 } else {
                     // Shrink captured pieces.
-                    board.boardPosition[targetPosition].scale.set(0.01, 0.01, 0.01);
+                    board.boardPosition[targetPosition].scale.set(0.001, 0.001, 0.001);
                 }
 
             }
@@ -276,7 +284,7 @@ var move = function(response) {
     function clearBoard() {
         for (var position in board.boardPosition) {
             if (board.boardPosition[position] != 'empty') {
-                board.boardPosition[position].scale.set(0.01, 0.01, 0.01);
+                board.boardPosition[position].scale.set(0.001, 0.001, 0.001);
             }
 
         }
@@ -293,25 +301,33 @@ var move = function(response) {
             z: currentPiece.scale.z
         };
         var target = {
-            x: 0.01,
-            y: 0.01,
-            z: 0.01
+            x: 1,
+            y: 0.001,
+            z: 1
         };
 
-        currentPiece.scale.set(target);
+        //currentPiece.scale.set(target);
 
-        // var tweenCapture = new TWEEN.Tween(position).to(target, 500);
+        var tweenCapture = new TWEEN.Tween(scale).to(target, 500);
 
-        // tweenCapture.onUpdate(function(){
-        //     //  Shrink capture piece. 
-        //     currentPiece.scale.set(scale.x, scale.y, scale.z);
-        // });
+        tweenCapture.onUpdate(function() {
+            console.log('In tween, scale is:' + scale.x + ' ' + scale.y + ' ' + scale.z);
+            //  Shrink capture piece. 
+            currentPiece.scale.set(scale.x, scale.y, scale.z);
+        });
 
-        // tweenCapture.onComplete(function(){
+        tweenCapture.onComplete(function() {
+            currentPiece.scale.x = 0.001;
+            currentPiece.scale.z = 0.001;
+        });
+
+        console.log('Finished caling, callback called.');
         animation.func(animation.param1, animation.param2, handleAnimations);
-        // });
 
-        // tweenCapture.start();
+        //tweenCapture.easing(TWEEN.Easing.Exponential.Out);
+
+        tweenCapture.delay(100);
+        tweenCapture.start();
 
         console.log('piece(s) capture');
     }
