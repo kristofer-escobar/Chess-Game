@@ -273,24 +273,26 @@ var move = function(response) {
 
     // Animate capturing of pieces.
     function capture(animation){
-
+//debugger;
         var currentPiece = board.boardPosition[animation.param2];
 
         var scale = { x : currentPiece.scale.x , y: currentPiece.scale.y, z: currentPiece.scale.z};
         var target = { x : 0.01, y: 0.01, z: 0.01 };
 
-        var tweenCapture = new TWEEN.Tween(position).to(target, 1000);
+currentPiece.scale.set(target);
 
-        tweenCapture.onUpdate(function(){
-            //  Shrink capture piece. 
-            currentPiece.scale.set(scale.x, scale.y, scale.z);
-        });
+        // var tweenCapture = new TWEEN.Tween(position).to(target, 500);
 
-        tweenCapture.onComplete(function(){
-            animation.func(animation.param1, animation.param2, handleAnimations);
-        });
+        // tweenCapture.onUpdate(function(){
+        //     //  Shrink capture piece. 
+        //     currentPiece.scale.set(scale.x, scale.y, scale.z);
+        // });
 
-        tweenCapture.start();
+        // tweenCapture.onComplete(function(){
+        animation.func(animation.param1, animation.param2, handleAnimations);
+        // });
+
+        // tweenCapture.start();
 
         console.log('entered capture');
     }
