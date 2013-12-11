@@ -213,6 +213,12 @@
 					callback(animateQueue);
 				});
 
+				// Add delay.
+				tween.delay(200);
+
+				// Ease elastic effect.
+				tween.easing(TWEEN.Easing.Sinusoidal.Out)
+
 				// Start tween.
 				tween.start();
             }

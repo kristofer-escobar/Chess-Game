@@ -75,15 +75,22 @@ var move = function(response) {
 
     } else {
         // Game is still going, get the following move and animate.
-        for (var i = movesList.length; i < response.moves.length; i++) {
-            loadState(moveList, true);
+        for (var i = moveList.length; i < response.moves.length; i++) {
+            // Get difference in moves.
+            var difference = [];
+
+            for(var i = moveList.length; i < response.moves.length; i ++){
+                difference.push(response.moves[i]);
+            }
+
+            loadState(difference, true);
         }
 
         // Update list of moves.
         moveList = response.moves;
 
         // Poll
-        setTimeout(move, seconds * 1000);
+        setTimeout(start, seconds * 1000);
     }
 
     console.log(response);
