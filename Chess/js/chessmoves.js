@@ -8,6 +8,7 @@ var gameover = false;
 var captured = [];
 var animateQueue = [];
 var timeoutId;
+var whiteTurn;
 
 var ChessMoves = function() {
 
@@ -72,6 +73,8 @@ var move = function(response) {
 
     moveList = response.moves;
 
+    whiteTurn = response.whitesturn;
+
     if ((!gameover) && (moveList)) {
         // Game is still going, get the following move and animate.
         for (var i = moveList.length; i < response.moves.length; i++) {
@@ -131,6 +134,11 @@ var move = function(response) {
 
             // Get the current piece being moved.
             currentPiece = board.boardPosition[startPosition];
+
+            // Check for promotions.
+            if(pieceName == 'P'){
+
+            }
 
             // Checking for white castling.
             if (pieceName == 'K' && startPosition == 'E1' && (targetPosition == 'C1' || targetPosition == 'G1')) {
