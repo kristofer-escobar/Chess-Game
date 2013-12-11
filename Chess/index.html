@@ -46,15 +46,6 @@
         <script type="text/javascript" src="../lib/dat.gui.min.js"></script>
 
         <script type="text/javascript" src="../lib/helpers.js"></script>
-        <script type="text/javascript" src="js/bicycle.js"></script>
-        <script type="text/javascript" src="js/pawn.js"></script>
-        <script type="text/javascript" src="js/pawn2.js"></script>
-        <script type="text/javascript" src="js/rook.js"></script>
-        <script type="text/javascript" src="js/knight.js"></script>
-        <script type="text/javascript" src="js/bishop.js"></script>
-        <script type="text/javascript" src="js/queen.js"></script>
-        <script type="text/javascript" src="js/king.js"></script>
-
         <script type="text/javascript" src="js/chessboard.js"></script>
         <script type="text/javascript" src="js/road.js"></script>
 
@@ -114,20 +105,17 @@
                 directionalLight.position.set( 0.5, 2, 1 ).normalize();
                 scene.add( directionalLight );
 
-                var loader = new THREE.OBJMTLLoader();
-
                 // Create chess board.
                 board = new ChessBoard();
                 
-
                 // Initialize chess board.
-                board.init( scene );
+                board.init();
+                console.log('board init');
 
 				scene.add( board );
 
-				setTimeout(function(){movePiece('A2', 'A3');
-
-			},3000);
+				setTimeout(function(){movePiece('D1', 'D4');			},3000);
+				setTimeout(function(){movePiece('D4', 'D6');			},6000);
                
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -150,9 +138,9 @@
 				var currentPiece = board.boardPosition[startPosition];
 
 				tween.onUpdate(function(){
-
-					currentPiece.position.x = position.x;
-    				currentPiece.position.z = position.z;
+					currentPiece.position.set(position.x,0,position.z);
+					board.boardPosition[targetPosition] = currentPiece;
+					board.boardPosition[startPosition] = "empty";
 				});
 
 				tween.start();
@@ -196,6 +184,7 @@
                 try {
                     bicycle.animate();
                 } catch (e) {}
+
                 render();
 
             }

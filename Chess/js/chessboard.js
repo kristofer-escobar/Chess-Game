@@ -7,7 +7,8 @@ const BOARD_Z_POSITION = 3;
 const MOVE_DISTANCE = 2.15;
 
 var models = {};
-var modelsLoaded = 31;
+var currentLoaded = 0;
+var modelsLoaded = 32;
 
 var ChessBoard = function() {
 
@@ -22,9 +23,13 @@ var ChessBoard = function() {
     this.position.y = BOARD_Y_POSITION;
     this.position.z = BOARD_Z_POSITION;
 
-    // Board Positions.
+    // Board piece positions.
     this.boardPosition = {};
+
+    // Board position to coordinate mapping.
     this.PositionMap = {};
+
+    // Piece list.
     this.pieces = ['WhiteRook1',
         'WhiteKnight1',
         'WhiteBishop1',
@@ -59,7 +64,6 @@ var ChessBoard = function() {
         'BlackRook2'
     ]
 
-
     // Load chess board model.
     loader.load('models/chessboard.obj', 'materials/chessboard.mtl', function(board) {
         board.position.set(-0.3625, 0, 0.5);
@@ -73,10 +77,9 @@ var ChessBoard = function() {
 ChessBoard.prototype = new THREE.Object3D();
 
 ChessBoard.prototype.animate = function() {
-
 }
 
-ChessBoard.prototype.init = function(scene) {
+ChessBoard.prototype.init = function() {
 
     // Initialize the chess board.
     this.initBoard();
@@ -123,8 +126,35 @@ ChessBoard.prototype.initBoard = function() {
 
 }
 
-ChessBoard.prototype.initPieces = function(scene) {
+ChessBoard.prototype.loadPieces = function(callback) {
 
+    currentLoaded = 0;
+
+    for (var piece in this.pieces) {
+        (function(model) {
+
+            // Piece Material.
+            var modelMaterial = model.substring(0, model.length - 1);
+
+            loader.load('models/' + model + '.obj', 'materials/' + modelMaterial + '.mtl', function(object) {
+                models[model] = object;
+                currentLoaded++;
+            });
+
+        })(this.pieces[piece]);
+    }
+
+        var loadedModels = setInterval(function() {
+            if (currentLoaded === modelsLoaded) {
+                clearInterval(loadedModels);
+                callback();
+            }
+        }, 100);
+
+}
+
+ChessBoard.prototype.initPieces = function() {
+//console.log("inside init piece");
     // Dictionary to hold initial state of board.
     var initialState = {
         'A1': 'WhiteRook1',
@@ -177,6 +207,7 @@ ChessBoard.prototype.initPieces = function(scene) {
         var pos = board.PositionMap[position];
 
         if (pieceModel != undefined) {
+
             pieceModel.position.x = pos.x;
             pieceModel.position.z = pos.z;
         }
@@ -190,33 +221,3 @@ ChessBoard.prototype.initPieces = function(scene) {
     }
 }
 
-// Helper function to create chess pieces. 
-function getPiece(name) {
-    return models[name];
-}
-
-ChessBoard.prototype.loadPieces = function(callback) {
-
-    for (var piece in this.pieces) {
-        (function(model) {
-
-            // Piece Material.
-            var modelMaterial = model.substring(0, model.length - 1);
-            //debugger;
-            loader.load('models/' + model + '.obj', 'materials/' + modelMaterial + '.mtl', function(object) {
-                models[model] = object;
-            });
-        })(this.pieces[piece]);
-
-        //debugger;
-        var checkInterval = setInterval(function() {
-            if (piece == modelsLoaded) {
-                //alert("hello");
-                clearInterval(checkInterval);
-                callback();
-            }
-        }, 100);
-
-    }
-
-}
