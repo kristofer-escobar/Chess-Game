@@ -9,6 +9,7 @@ const MOVE_DISTANCE = 2.15;
 var models = {};
 var currentLoaded = 0;
 var modelsLoaded = 32;
+var gameID;
 
 var ChessBoard = function() {
 
@@ -76,9 +77,6 @@ var ChessBoard = function() {
 
 ChessBoard.prototype = new THREE.Object3D();
 
-ChessBoard.prototype.animate = function() {
-}
-
 ChessBoard.prototype.init = function() {
 
     // Initialize the chess board.
@@ -89,13 +87,35 @@ ChessBoard.prototype.init = function() {
 }
 
 ChessBoard.prototype.buildGUI = function() {
-    var gui = new dat.GUI();
-    var chessGameFolder = gui.addFolder('ChessGame');
-    //    chessGameFolder.add(this.rearWheel, 'incr', MINTURN / 4, MAXTURN / 4).listen();
-    //    chessGameFolder.add(this.handlebar.rotation, 'y', MINTURN, MAXTURN).listen();
-    chessGameFolder.open();
-}
 
+    var controls = new ChessControls();
+    var moves = new ChessMoves();
+    var gui = new dat.GUI();
+
+    // Get default game id.
+    gameID = moves.gameId;
+
+    var chessGameFolder = gui.addFolder('ChessGame');
+    chessGameFolder.add(moves, 'gameId').listen().name("Game ID").onChange(function(newValue) {
+        console.log("Game Id changed to:  ", newValue);
+        gameID = newValue;
+    });
+
+    chessGameFolder.add(moves, 'startGame').listen().name("Start Game");
+    chessGameFolder.add(moves, 'replay').listen().name("Replay Game");
+    chessGameFolder.add(moves, 'reset').listen().name("Reset");
+    chessGameFolder.open();
+
+    var Camera = gui.addFolder('Camera');
+    Camera.add(controls, 'WhiteView').name("White View");
+    Camera.add(controls, 'BlackView').name("Black View");
+    Camera.add(controls, 'TopView').name("Top View");
+    Camera.open();
+
+    var theme = gui.addFolder('Themes');
+    theme.open();
+
+}
 
 ChessBoard.prototype.initBoard = function() {
 
@@ -137,6 +157,8 @@ ChessBoard.prototype.loadPieces = function(callback) {
             var modelMaterial = model.substring(0, model.length - 1);
 
             loader.load('models/' + model + '.obj', 'materials/' + modelMaterial + '.mtl', function(object) {
+
+                // Store reference to model.
                 models[model] = object;
                 currentLoaded++;
             });
@@ -144,9 +166,12 @@ ChessBoard.prototype.loadPieces = function(callback) {
         })(this.pieces[piece]);
     }
 
+        // Check if all the models were loaded.
         var loadedModels = setInterval(function() {
             if (currentLoaded === modelsLoaded) {
                 clearInterval(loadedModels);
+
+                // Callback to initialize pieces on board.
                 callback();
             }
         }, 100);
@@ -154,7 +179,7 @@ ChessBoard.prototype.loadPieces = function(callback) {
 }
 
 ChessBoard.prototype.initPieces = function() {
-//console.log("inside init piece");
+
     // Dictionary to hold initial state of board.
     var initialState = {
         'A1': 'WhiteRook1',

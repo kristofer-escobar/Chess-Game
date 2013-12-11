@@ -33,19 +33,16 @@
     <body>
     	<script type="text/javascript" src="../lib/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="../lib/Three.js"></script>
-		<script type='text/javascript' src='../lib/EventDispatcher.js'></script>
-		<script type='text/javascript' src='../lib/Ticker.js'></script>
 		<script type='text/javascript' src='../lib/Tween.js'></script>
 		<script type='text/javascript' src='../lib/TrackballControls.js'></script>
         <script type="text/javascript" src="../lib/loaders/MTLLoader.js"></script>
         <script type="text/javascript" src="../lib/loaders/OBJMTLLoader.js"></script>
-
         <script type="text/javascript" src="../lib/Detector.js"></script>
         <script type="text/javascript" src="../lib/stats.min.js"></script>
-
         <script type="text/javascript" src="../lib/dat.gui.min.js"></script>
-
         <script type="text/javascript" src="../lib/helpers.js"></script>
+        <script type="text/javascript" src="js/chessmoves.js"></script>
+        <script type="text/javascript" src="js/chesscontrols.js"></script>
         <script type="text/javascript" src="js/chessboard.js"></script>
         <script type="text/javascript" src="js/road.js"></script>
 
@@ -90,6 +87,7 @@
                 // Scene
                 scene = new THREE.Scene();
 
+                // Lights.
                 var ambient = new THREE.AmbientLight( 0x101010 );
                 scene.add( ambient );
 
@@ -110,40 +108,23 @@
                 
                 // Initialize chess board.
                 board.init();
-                console.log('board init');
 
+                // Add board.
 				scene.add( board );
-
-				setTimeout(function(){movePiece('D1', 'D4');			},3000);
-				setTimeout(function(){movePiece('D4', 'D6');			},6000);
                
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 container.appendChild( renderer.domElement );
-
+				$('canvas').css('background-image', 'url(textures/background.jpg)');
                 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
                 document.addEventListener( 'keyup', onKeyUp, false );
                 document.addEventListener( 'keydown', onKeyDown, false );
                 window.addEventListener( 'resize', onWindowResize, false );   
-            }
 
-            // Function to move chess pieces.
-            function movePiece(startPosition, targetPosition){
-
-                var position = { x: board.PositionMap[startPosition].x, z : board.PositionMap[startPosition].z};
-				var target = { x: board.PositionMap[targetPosition].x, z : board.PositionMap[targetPosition].z};
-
-				var tween = new TWEEN.Tween(position).to(target, 1000);
-
-				var currentPiece = board.boardPosition[startPosition];
-
-				tween.onUpdate(function(){
-					currentPiece.position.set(position.x,0,position.z);
-					board.boardPosition[targetPosition] = currentPiece;
-					board.boardPosition[startPosition] = "empty";
-				});
-
-				tween.start();
+                // Test animations.
+				setTimeout(function(){movePiece('D1', 'D4');			},3000);
+				setTimeout(function(){movePiece('D4', 'D6');			},6000);
+				setTimeout(function(){movePiece('B2', 'B4');			},9000);
             }
 
             function onWindowResize() {
@@ -162,8 +143,6 @@
 
             function onKeyUp( event ) {
                 switch (event.keyCode) {
-                case 73: bicycle.pedalFwd(); break;
-                case 75: bicycle.pedalRev(); break;
                 default: return;
                 }
             }
@@ -179,10 +158,11 @@
             }
 
             function animate() {
+
                 requestAnimationFrame( animate );
                 controls.update();
+
                 try {
-                    bicycle.animate();
                 } catch (e) {}
 
                 render();
@@ -193,6 +173,38 @@
             	TWEEN.update();
                 renderer.render( scene, camera );
 
+            }
+
+            // Function to move chess pieces.
+            function movePiece(startPosition, targetPosition){
+
+            	// Get piece starting position.
+                var position = { x: board.PositionMap[startPosition].x, z : board.PositionMap[startPosition].z};
+
+                // Get piece target position.
+				var target = { x: board.PositionMap[targetPosition].x, z : board.PositionMap[targetPosition].z};
+
+				// Create a new tween.
+				var tween = new TWEEN.Tween(position).to(target, 1000);
+
+				// Get the piece at the current position.
+				var currentPiece = board.boardPosition[startPosition];
+
+				// Setup tween.
+				tween.onUpdate(function(){
+
+					// Set position.
+					currentPiece.position.set(position.x,0,position.z);
+
+					// Move piece to new position.
+					board.boardPosition[targetPosition] = currentPiece;
+
+					// Clear out pervious position.
+					board.boardPosition[startPosition] = "empty";
+				});
+
+				// Start tween.
+				tween.start();
             }
 
         </script>
