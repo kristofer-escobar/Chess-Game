@@ -69,11 +69,7 @@ var move = function(response) {
 
     moveList = response.moves;
 
-    if (!gameover) { // using false for testing.
-        // The game is over, show the final state of the board.
-        loadState(moveList, false);
-
-    } else {
+    if (!gameover) {
         // Game is still going, get the following move and animate.
         for (var i = moveList.length; i < response.moves.length; i++) {
             // Get difference in moves.
