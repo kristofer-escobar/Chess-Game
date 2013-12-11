@@ -51,7 +51,7 @@ var ChessMoves = function() {
     function start() {
         $.ajax({
             method: 'GET',
-            url: URL + gameID,
+            url: GAME_URL + gameID,
             crossDomain: true,
             contentType: 'application/json; charset=UTF-8',
             dataType: 'json',
@@ -74,8 +74,16 @@ var move = function(response) {
         loadState(moveList, false);
 
     } else {
-        // Game is still going, get the first move and animate.
+        // Game is still going, get the following move and animate.
+        for (var i = movesList.length; i < response.moves.length; i++) {
+            loadState(moveList, true);
+        }
 
+        // Update list of moves.
+        moveList = response.moves;
+
+        // Poll
+        setTimeout(move, seconds * 1000);
     }
 
     console.log(response);
@@ -126,7 +134,7 @@ var move = function(response) {
                             param2: 'D1'
                         });
                     } else {
-                        
+
                         var rook = board.boardPosition['A1'];
 
                         // Update the piece's position on the board.
@@ -157,7 +165,7 @@ var move = function(response) {
 
                         // Move the model.
                         rook.position.set(board.PositionMap['F1'].x, 0, board.PositionMap['F1'].z);
-                           
+
                         // Clear out previous position.
                         board.boardPosition['H1'] = "empty";
                     }
@@ -181,11 +189,11 @@ var move = function(response) {
                         var rook = board.boardPosition['A8'];
 
                         // Update the piece's position on the board.
-                        board.boardPosition['D8'] = rook;                       
-                        
+                        board.boardPosition['D8'] = rook;
+
                         // Move the model.
                         rook.position.set(board.PositionMap['D8'].x, 0, board.PositionMap['D8'].z);
-                        
+
                         // Clear out previous position.
                         board.boardPosition['A8'] = "empty";
                     }
@@ -272,14 +280,22 @@ var move = function(response) {
     }
 
     // Animate capturing of pieces.
-    function capture(animation){
-//debugger;
+    function capture(animation) {
+        //debugger;
         var currentPiece = board.boardPosition[animation.param2];
 
-        var scale = { x : currentPiece.scale.x , y: currentPiece.scale.y, z: currentPiece.scale.z};
-        var target = { x : 0.01, y: 0.01, z: 0.01 };
+        var scale = {
+            x: currentPiece.scale.x,
+            y: currentPiece.scale.y,
+            z: currentPiece.scale.z
+        };
+        var target = {
+            x: 0.01,
+            y: 0.01,
+            z: 0.01
+        };
 
-currentPiece.scale.set(target);
+        currentPiece.scale.set(target);
 
         // var tweenCapture = new TWEEN.Tween(position).to(target, 500);
 
@@ -294,25 +310,25 @@ currentPiece.scale.set(target);
 
         // tweenCapture.start();
 
-        console.log('entered capture');
+        console.log('piece(s) capture');
     }
 
     // Function to handle queued up animations.
-    function handleAnimations( queue ){
+    function handleAnimations(queue) {
 
         //debugger;
-        if(queue.length > 0){
+        if (queue.length > 0) {
             var animation = queue.shift();
 
             // Check for capture.
-            if(board.boardPosition[animation.param2] != 'empty'){
+            if (board.boardPosition[animation.param2] != 'empty') {
                 capture(animation);
-            }else{
+            } else {
                 // Run animation.
                 animation.func(animation.param1, animation.param2, handleAnimations);
             }
 
-        }else{
+        } else {
             console.log("Done animating.");
         }
     }
