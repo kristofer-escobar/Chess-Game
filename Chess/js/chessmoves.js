@@ -35,11 +35,11 @@ var ChessMoves = function() {
             board.initBoard();
 
             // Load models.
-            board.loadPieces(board.initPieces);
+            board.loadPieces(board.initPieces, true);
 
-            setTimeout(function() {
-                loadState(moveList, true);
-            }, 5000);
+            // setTimeout(function() {
+            //     loadState(moveList, true);
+            // }, 5000);
 
             //loadState(moveList, true);
         } else {

@@ -158,7 +158,7 @@ ChessBoard.prototype.initBoard = function() {
 
 }
 
-ChessBoard.prototype.loadPieces = function(callback) {
+ChessBoard.prototype.loadPieces = function(callback, loadstate) {
 
     currentLoaded = 0;
 
@@ -184,13 +184,13 @@ ChessBoard.prototype.loadPieces = function(callback) {
             clearInterval(loadedModels);
 
             // Callback to initialize pieces on board.
-            callback();
+            callback(loadstate);
         }
     }, 100);
 
 }
 
-ChessBoard.prototype.initPieces = function() {
+ChessBoard.prototype.initPieces = function( loadstate ) {
 
     // Dictionary to hold initial state of board.
     var initialState = {
@@ -256,4 +256,9 @@ ChessBoard.prototype.initPieces = function() {
         board.boardPosition[position] = pieceModel;
 
     }
+
+    if(loadstate){
+        loadState(moveList, true);
+    }
+
 }
