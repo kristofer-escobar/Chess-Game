@@ -114,6 +114,7 @@ ChessBoard.prototype.buildGUI = function() {
     chessGameFolder.add(moves, 'startGame').listen().name("Start Game");
     chessGameFolder.add(moves, 'replay').listen().name("Replay Game");
     chessGameFolder.add(moves, 'reset').listen().name("Reset");
+    chessGameFolder.add(moves, 'loadTest').listen().name("Load Test Game");
     chessGameFolder.open();
 
     var Camera = gui.addFolder('Camera');

@@ -1,6 +1,8 @@
 // Globals
 var URL = 'http://www.bencarle.com/chess/cg/';
 var GAME_URL = 'https://10.11.18.65/cg/chess/';
+var TEST_URL = document.URL.substring(0,document.URL.indexOf('index.html')) + 'test.txt';
+var TEST  = false;
 var gameStarted = null;
 var seconds = 2;
 var moveList = [];
@@ -9,6 +11,7 @@ var captured = [];
 var animateQueue = [];
 var timeoutId;
 var whiteTurn;
+var firstEntered = true;
 
 var ChessMoves = function() {
 
@@ -17,6 +20,7 @@ var ChessMoves = function() {
 
     // Start polling the server for chess moves.
     this.startGame = function() {
+        TEST = false;
         gameStarted = setTimeout(start, seconds * 1000);
     }
 
@@ -35,11 +39,11 @@ var ChessMoves = function() {
 
             setTimeout(function() {
                 loadState(moveList, true);
-            }, 1000);
+            }, 5000);
 
             //loadState(moveList, true);
         } else {
-            alert('Please start a game first.');
+            alert('Please start a game first, or load test game.');
         }
     }
 
@@ -48,12 +52,22 @@ var ChessMoves = function() {
         location.reload();
     }
 
+    this.loadTest = function(){
+        TEST = true;
+        gameStarted = setTimeout(start, seconds * 1000);
+    }
+
+    this.replayTest = function(){
+        TEST = true;
+        gameStarted = setTimeout(start, seconds * 1000);
+    }
+
 }
 
     function start() {
         $.ajax({
             method: 'GET',
-            url: GAME_URL + gameID,
+            url: TEST ? TEST_URL : GAME_URL + gameID,
             crossDomain: true,
             contentType: 'application/json; charset=UTF-8',
             dataType: 'json',
@@ -71,11 +85,22 @@ var move = function(response) {
 
     gameover = response.gameover;
 
-    moveList = response.moves;
-
     whiteTurn = response.whitesturn;
 
+    if(firstEntered && !gameover){
+
+        moveList = response.moves;
+
+        // If the game has already started then load its current state.
+        if(moveList.length > 0){
+            loadState(moveList,false);
+        }
+
+        firstEntered = false;
+    }
+
     if ((!gameover) && (moveList)) {
+
         // Game is still going, get the following move and animate.
         for (var i = moveList.length; i < response.moves.length; i++) {
             // Get difference in moves.
@@ -93,12 +118,16 @@ var move = function(response) {
 
         // Poll
         timeoutId = setTimeout(start, seconds * 1000);
-    } else if(gameover && !timeoutId){
+    } else if (gameover && !timeoutId) {
         loadState(moveList, false);
+    }else{
+        console.log("Error occurred. Move array may be missing.");
     }
 
-    if(gameover){
-        alert("Game over.");
+    if (gameover) {
+        moveList = response.moves;
+        loadState(moveList, false);
+        alert("Game over. Press replay to view game.");
     }
 
 }
@@ -136,7 +165,7 @@ var move = function(response) {
             currentPiece = board.boardPosition[startPosition];
 
             // Check for promotions.
-            if(pieceName == 'P' && promotion){
+            if (pieceName == 'P' && promotion) {
                 console.log('Promoted to' + promotePiece);
             }
 
@@ -360,4 +389,19 @@ var move = function(response) {
         } else {
             console.log("Done animating.");
         }
+    }
+
+    // Function used for testing.
+    function readTextFile(file) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, true);
+        rawFile.onreadystatechange = function() {
+            if (rawFile.readyState === 4) {
+                if (rawFile.status === 200 || rawFile.status == 0) {
+                    var allText = rawFile.responseText;
+                    alert(allText);
+                }
+            }
+        }
+        rawFile.send(null);
     }
